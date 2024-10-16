@@ -269,7 +269,8 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the row is negative or greater than or equal to the height.
    */
   public void deleteRow(int row) {
-    // STUB
+    // STUB // Need to fix tests: understanding of def is that it is default and nothing else
+    // i.e. no initialized so arrays of same size but diff def are equal. 
   } // deleteRow(int)
 
   /**
