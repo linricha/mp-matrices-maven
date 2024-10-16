@@ -256,7 +256,7 @@ public class MatrixV0<T> implements Matrix<T> {
       } // if/else
     } // for
     this.storage = placeholder;
-    this.height++;
+    this.width++;
   } // insertCol(int, T[])
 
   /**
@@ -271,6 +271,21 @@ public class MatrixV0<T> implements Matrix<T> {
   public void deleteRow(int row) {
     // STUB // Need to fix tests: understanding of def is that it is default and nothing else
     // i.e. no initialized so arrays of same size but diff def are equal. 
+    if ((row >= height) || (row < 0)) {
+      throw new IndexOutOfBoundsException();
+    } // if
+
+    T[] placeholder = createEmptyArray(this.storage.length - this.width);
+    for (int i = 0, j = 0; i < placeholder.length; i++) {
+      if (i >= ((row + 1) * this.width - 1) || i <= (row * this.width)) {
+        j++; // skip over
+      } else {
+        placeholder[i] = storage[j];
+        j++;
+      } // if/else
+    } // for
+    this.storage = placeholder;
+    this.height--;
   } // deleteRow(int)
 
   /**
@@ -283,7 +298,21 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the column is negative or greater than or equal to the width.
    */
   public void deleteCol(int col) {
-    // STUB
+    if ((col >= width) || (col < 0)) {
+      throw new IndexOutOfBoundsException();
+    } // if
+
+    T[] placeholder = createEmptyArray(this.storage.length - this.height);
+    for (int i = 0, j = 0; i < placeholder.length; i++) {
+      if (i % this.width == col) {
+        k++; // skip over
+      } else {
+        placeholder[i] = storage[j];
+        j++;
+      } // if/else
+    } // for
+    this.storage = placeholder;
+    this.width++;
   } // deleteCol(int)
 
   /**
@@ -342,7 +371,13 @@ public class MatrixV0<T> implements Matrix<T> {
    * @return a copy of the matrix.
    */
   public Matrix clone() {
-    return this;        // STUB
+    MatrixV0<T> cloneMatrix = new MatrixV0<T>(this.width, this.height);
+
+    for (int i = 0; i < cloneMatrix.storage.length; i++) {
+      cloneMatrix.storage[i] = this.storage[i];
+    } // for
+
+    return cloneMatrix;
   } // clone()
 
   /**
@@ -355,7 +390,17 @@ public class MatrixV0<T> implements Matrix<T> {
    * height, and equal elements; false otherwise.
    */
   public boolean equals(Object other) {
-    return this == other;       // STUB
+    if (other instanceof MatrixV0) {
+      if ((((MatrixV0<T>) other).width == this.width) && (((MatrixV0<T>) other).height == this.height)) {
+        for (int i = 0; i < ((MatrixV0<T>) other).storage.length; i++) {
+          if (((MatrixV0<T>) other).storage[i] != this.storage[i]) {
+            return false;
+          } // if
+        } // for
+        return true;
+      } // if
+    } // if
+    return false;
   } // equals(Object)
 
   /**
