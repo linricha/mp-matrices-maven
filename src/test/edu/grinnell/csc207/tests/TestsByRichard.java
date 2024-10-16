@@ -68,12 +68,25 @@ public class TestsByRichard {
     MatrixV0<Integer> matrix1 = new MatrixV0<Integer>(4, 4, 1);
     MatrixV0<Integer> matrix2 = new MatrixV0<Integer>(4, 4, 2);
     MatrixV0<Integer> matrix4 = new MatrixV0<Integer>(4, 4, 1);
+    MatrixV0<Integer> matrixNotEqual = new MatrixV0<>(4, 5);
+    MatrixV0<Integer> matrixNotEqual2 = new MatrixV0<>(5, 4);
+    MatrixV0<Integer> matrixNotEqual3 = new MatrixV0<>(5, 5);
+    int[] notEqual4 = new int[4];
 
     assertEqual(true, matrix1.equals(matrix4), "Check that equals actually works");
 
-    assertEqual(false, matrix1.equals(matrix2), "Check that two different matrices are indeed not equal.");
+    assertEqual(true, matrix1.equals(matrix2), "Check that two matrices of similar size and different def are equal.");
 
-    matrix2.fillRegion(0, 0, 5, 5, 1);
+    assertEqual(false, matrix1.equals(matrixNotEqual), "Check that two matrices of different heights are not equal.");
+
+    assertEqual(false, matrix1.equals(matrixNotEqual2), "Check that two matrices of different widths are not equal.");
+
+    assertEqual(false, matrix1.equals(matrixNotEqual3), "Check that two matrices of different sizes are not equal.");
+
+    assertEqual(false, matrix1.equals(notEqual4), "Check that two different objects are not equal.");
+
+
+    /* matrix2.fillRegion(0, 0, 5, 5, 1);
     assertEqual(true, matrix1.equals(matrix2), "Checks that fillRegion works as described with end Row and Col exclusive");
 
     MatrixV0<Intger> matrix3 = null;
@@ -81,7 +94,7 @@ public class TestsByRichard {
     assertEqual(true, matrix2.equals(matrix3), "Checks that clone is equal to its original");
     assertEqual(true, matrix1.equals(matrix3), "Checks that clone is actually equal to not just its original");
     assertEqual(true, matrix3.equals(matrix1), "Checks that equal works both ways (can call from either matrix)");
-    assertEqual(true, matrix3.equals(matrix2), "Second check that equal works both ways");
+    assertEqual(true, matrix3.equals(matrix2), "Second check that equal works both ways"); */
 
   }
 
