@@ -334,7 +334,16 @@ public class MatrixV0<T> implements Matrix<T> {
    */
   public void fillRegion(int startRow, int startCol, int endRow, int endCol,
       T val) {
-    // STUB
+
+    if ((startRow >= this.height) || (startRow < 0) || (endCol < 0) || (endRow < 0) || (endCol > this.width) || (endRow > this.height)) {
+      throw new IndexOutOfBoundsException();
+    } // if
+
+    int rowCurrent = startRow;
+
+    for (int i = rowCurrent; i < endRow; i++) {
+      fillLine(rowCurrent, startCol, 0, 1, rowCurrent + 1, endCol, val);
+    } // for
   } // fillRegion(int, int, int, int, T)
 
   /**
@@ -359,8 +368,37 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the rows or columns are inappropriate.
    */
   public void fillLine(int startRow, int startCol, int deltaRow, int deltaCol,
-      int endRow, int endCol, T val) {
-    // STUB
+      int endRow, int endCol, T val) { // deals with end being less than start (Do I need to make it throw Exception?)
+  
+    if ((startRow >= this.height) || (startRow < 0) || (endCol < 0) || (endRow < 0) || (endCol > this.width) || (endRow > this.height)) {
+      throw new IndexOutOfBoundsException();
+    } // if
+
+    // int updatedEndRow = endRow; (caught by initial if)
+    // int updatedEndCol = endCol;
+
+    // // bound endCol and endRow to what they would be for ease of use
+    // if (updatedEndRow > this.height || updatedEndCol > this.width) {
+    //   updatedEndRow = this.height;
+    //   updatedEndCol = this.width;
+    // } // if
+
+    int modifyStartIndex = (startRow + 1) + (startCol * this.width) - 1;
+    int modifyDelta = (startRow + 1) + (deltaCol * this.width) - 1;
+    int modifyCurrentIndex = modifyStartIndex;
+
+    for (int i = 0; i < this.storage.length; i++) {
+      if ((i + 1) / this.width < endRow - 1) { // endRow replaced updatedEndRow
+        if (i % this.height < endCol - 1) { // endCol replaced updatedEndCol
+          if (i == modifyCurrentIndex) {
+            this.storage[i] = val;
+            modifyCurrentIndex += modifyDelta;
+          } // if
+        } else {
+          return; // Since not in modify area if modify height surpassed.
+        } // if/else
+      } // if
+    } // for
   } // fillLine(int, int, int, int, int, int, T)
 
   /**
