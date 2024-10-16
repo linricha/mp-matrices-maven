@@ -1,7 +1,6 @@
-package edu.grinnell.csc207.tests;
+package edu.grinnell.csc207;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import edu.grinnell.csc207.util.Matrix;
@@ -13,54 +12,54 @@ public class TestsByRichard {
   public void checkHeightChanges() {
     MatrixV0<String> matrix1 = new MatrixV0<String>(3, 4);
 
-    assertEqual(4, matrix1.height(), "Checks height for initial declaration");
+    assertEquals(4, matrix1.height(), "Checks height for initial declaration");
 
 
     matrix1.deleteRow(2);
-    assertEqual(3, matrix.height(), "Checks that height updates with deleteRow.");
+    assertEquals(3, matrix1.height(), "Checks that height updates with deleteRow.");
 
     matrix1.insertRow(2);
-    assertEqual(4, matrix1.height(), "Checks that height updates with insertRow.");
+    assertEquals(4, matrix1.height(), "Checks that height updates with insertRow.");
 
     matrix1.deleteCol(2);
-    assertEqual(4, matrix1.height(), "Checks that height is not updated with deleteCol.");
+    assertEquals(4, matrix1.height(), "Checks that height is not updated with deleteCol.");
 
     matrix1.insertCol(2);
     matrix1.insertCol(2);
-    assertEqual(4, matrix1.height(), "Checks that height is not updated with insertCol.");
+    assertEquals(4, matrix1.height(), "Checks that height is not updated with insertCol.");
 
     matrix1.fillRegion(0, 0, 3, 3, "Hi");
-    assertEqual(4, matrix1.height(), "Checks that height is not updated with fillRegion.");
+    assertEquals(4, matrix1.height(), "Checks that height is not updated with fillRegion.");
 
     matrix1.fillLine(0, 0, 0, 0, 3, 4, "Bye");
-    assertEqual(4, matrix1.height(), "Checks that height is not updated with fillRegion.");
+    assertEquals(4, matrix1.height(), "Checks that height is not updated with fillRegion.");
   } // checkHeightChanges()
 
   @Test
   public void checkWidthChanges() {
     MatrixV0<String> matrix1 = new MatrixV0<String>(3, 4);
 
-    assertEqual(3, matrix1.width(), "Checks width for initial declaration");
+    assertEquals(3, matrix1.width(), "Checks width for initial declaration");
 
 
     matrix1.deleteRow(2);
-    assertEqual(3, matrix.width(), "Checks that width does not update with deleteRow.");
+    assertEquals(3, matrix1.width(), "Checks that width does not update with deleteRow.");
 
     matrix1.insertRow(2);
-    assertEqual(3, matrix1.width(), "Checks that width does not update with insertRow.");
+    assertEquals(3, matrix1.width(), "Checks that width does not update with insertRow.");
 
     matrix1.deleteCol(2);
-    assertEqual(2, matrix1.width(), "Checks that width is updated with deleteCol.");
+    assertEquals(2, matrix1.width(), "Checks that width is updated with deleteCol.");
 
     matrix1.insertCol(2);
     matrix1.insertCol(2);
-    assertEqual(4, matrix1.width(), "Checks that width is updated with insertCol.");
+    assertEquals(4, matrix1.width(), "Checks that width is updated with insertCol.");
 
     matrix1.fillRegion(0, 0, 3, 3, "Hi");
-    assertEqual(4, matrix1.width(), "Checks that width is not updated with fillRegion.");
+    assertEquals(4, matrix1.width(), "Checks that width is not updated with fillRegion.");
 
     matrix1.fillLine(0, 0, 0, 0, 3, 4, "Bye");
-    assertEqual(4, matrix1.width(), "Checks that width is not updated with fillRegion.");
+    assertEquals(4, matrix1.width(), "Checks that width is not updated with fillRegion.");
   } // checkWidthChanges()
 
   @Test
@@ -73,17 +72,17 @@ public class TestsByRichard {
     MatrixV0<Integer> matrixNotEqual3 = new MatrixV0<>(5, 5);
     int[] notEqual4 = new int[4];
 
-    assertEqual(true, matrix1.equals(matrix4), "Check that equals actually works");
+    assertEquals(true, matrix1.equals(matrix4), "Check that equals actually works");
 
-    assertEqual(true, matrix1.equals(matrix2), "Check that two matrices of similar size and different def are equal.");
+    assertEquals(true, matrix1.equals(matrix2), "Check that two matrices of similar size and different def are equal."); // ?
 
-    assertEqual(false, matrix1.equals(matrixNotEqual), "Check that two matrices of different heights are not equal.");
+    assertEquals(false, matrix1.equals(matrixNotEqual), "Check that two matrices of different heights are not equal.");
 
-    assertEqual(false, matrix1.equals(matrixNotEqual2), "Check that two matrices of different widths are not equal.");
+    assertEquals(false, matrix1.equals(matrixNotEqual2), "Check that two matrices of different widths are not equal.");
 
-    assertEqual(false, matrix1.equals(matrixNotEqual3), "Check that two matrices of different sizes are not equal.");
+    assertEquals(false, matrix1.equals(matrixNotEqual3), "Check that two matrices of different sizes are not equal.");
 
-    assertEqual(false, matrix1.equals(notEqual4), "Check that two different objects are not equal.");
+    assertEquals(false, matrix1.equals(notEqual4), "Check that two different objects are not equal.");
 
 
     /* matrix2.fillRegion(0, 0, 5, 5, 1);
