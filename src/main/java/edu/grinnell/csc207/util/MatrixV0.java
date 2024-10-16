@@ -305,7 +305,7 @@ public class MatrixV0<T> implements Matrix<T> {
     T[] placeholder = createEmptyArray(this.storage.length - this.height);
     for (int i = 0, j = 0; i < placeholder.length; i++) {
       if (i % this.width == col) {
-        k++; // skip over
+        j++; // skip over
       } else {
         placeholder[i] = storage[j];
         j++;
@@ -370,7 +370,7 @@ public class MatrixV0<T> implements Matrix<T> {
    *
    * @return a copy of the matrix.
    */
-  public Matrix clone() {
+  public Matrix<T> clone() {
     MatrixV0<T> cloneMatrix = new MatrixV0<T>(this.width, this.height);
 
     for (int i = 0; i < cloneMatrix.storage.length; i++) {
@@ -389,6 +389,7 @@ public class MatrixV0<T> implements Matrix<T> {
    * @return true if the other object is a matrix with the same width,
    * height, and equal elements; false otherwise.
    */
+  @SuppressWarnings(("unchecked"))
   public boolean equals(Object other) {
     if (other instanceof MatrixV0) {
       if ((((MatrixV0<T>) other).width == this.width) && (((MatrixV0<T>) other).height == this.height)) {
