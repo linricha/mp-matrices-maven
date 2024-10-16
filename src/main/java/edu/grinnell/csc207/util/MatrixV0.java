@@ -3,7 +3,7 @@ package edu.grinnell.csc207.util;
 /**
  * An implementation of two-dimensional matrices.
  *
- * @author Your Name Here
+ * @author Richard Lin
  * @author Samuel A. Rebelsky
  *
  * @param <T>
@@ -13,6 +13,14 @@ public class MatrixV0<T> implements Matrix<T> {
   // +--------+------------------------------------------------------
   // | Fields |
   // +--------+
+
+  T[] storage;
+
+  int height;
+
+  int width;
+
+  T def;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -32,8 +40,17 @@ public class MatrixV0<T> implements Matrix<T> {
    * @throws NegativeArraySizeException
    *   If either the width or height are negative.
    */
+  @SuppressWarnings (("unchecked"))
   public MatrixV0(int width, int height, T def) {
-    // STUB
+    if (width < 1 || height < 1) {
+      throw new NegativeArraySizeException();
+    } // if
+    storage = (T[]) (new Object[width * height]); // check that this is all null
+
+    this.width = width;
+    this.height = height;
+    this.def = def;
+
   } // MatrixV0(int, int, T)
 
   /**
@@ -69,8 +86,11 @@ public class MatrixV0<T> implements Matrix<T> {
    * @throws IndexOutOfBoundsException
    *   If either the row or column is out of reasonable bounds.
    */
-  public T get(int row, int col) {
-    return null;        // STUB
+  public T get(int row, int col) throws IndexOutOfBoundsException{
+    if ((row >= this.height) || (col >= this.width) || (row < 0) || (col < 0)) {
+      throw new IndexOutOfBoundsException();
+    } // if
+    return this.storage[(row + 1) * (col + 1) - 1];
   } // get(int, int)
 
   /**
@@ -86,8 +106,11 @@ public class MatrixV0<T> implements Matrix<T> {
    * @throws IndexOutOfBoundsException
    *   If either the row or column is out of reasonable bounds.
    */
-  public void set(int row, int col, T val) {
-    // STUB
+  public void set(int row, int col, T val) throws IndexOutOfBoundsException{
+    if ((row >= this.height) || (col >= this.width) || (row < 0) || (col < 0)) {
+      throw new IndexOutOfBoundsException();
+    } // if
+    this.storage[(row + 1) * (col + 1) - 1] = val;
   } // set(int, int, T)
 
   /**
@@ -96,7 +119,7 @@ public class MatrixV0<T> implements Matrix<T> {
    * @return the number of rows.
    */
   public int height() {
-    return 5;   // STUB
+    return this.height;
   } // height()
 
   /**
@@ -105,8 +128,19 @@ public class MatrixV0<T> implements Matrix<T> {
    * @return the number of columns.
    */
   public int width() {
-    return 3;   // STUB
+    return this.width;
   } // width()
+
+  /**
+   * Returns new array of type T and size newArrLength.
+   *
+   * @param newArrLength Length of new array.
+   * @return An array of type T of size newArrLength.
+   */
+  @SuppressWarnings(("unchecked"))
+  public T[] createEmptyArray(int newArrLength) {
+    return (T[]) (new Object[newArrLength]);
+  } // createEmptyArray(int)
 
   /**
    * Insert a row filled with the default value.
@@ -118,7 +152,17 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the row is negative or greater than the height.
    */
   public void insertRow(int row) {
-    // STUB
+    T[] defArr = createEmptyArray(this.width);
+    for (int i = 0; i < this.width; i++) {
+      defArr[i] = def;
+    } // for
+
+    try {
+      insertRow(row, defArr);
+    } catch (Exception e) {
+      throw new IndexOutOfBoundsException();
+      // only this exception goes through since defArr is correct Array Size.
+    } // try/catch
   } // insertRow(int)
 
   /**
@@ -135,7 +179,25 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the size of vals is not the same as the width of the matrix.
    */
   public void insertRow(int row, T[] vals) throws ArraySizeException {
-    // STUB
+    if ((row >= height) || (row < 0)) {
+      throw new IndexOutOfBoundsException();
+    } // if
+
+    if (vals.length != this.width) {
+      throw new ArraySizeException();
+    } // if
+
+    T[] placeholder = createEmptyArray(this.storage.length + this.width);
+    for (int i = 0, j = 0; i < placeholder.length; i++) {
+      if (i >= ((row + 1) * this.width - 1) || i <= (row * this.width)) {
+        placeholder[i] = vals[i - j - 1]; // since i = j + 1 called here, thus i - j - 1 = 0.
+      } else {
+        placeholder[i] = storage[j];
+        j++;
+      } // if/else
+    } // for
+    this.storage = placeholder;
+    this.height++;
   } // insertRow(int, T[])
 
   /**
@@ -148,7 +210,17 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the column is negative or greater than the width.
    */
   public void insertCol(int col) {
-    // STUB
+    T[] defArr = createEmptyArray(this.height);
+    for (int i = 0; i < this.height; i++) {
+      defArr[i] = def;
+    } // for
+
+    try {
+      insertCol(col, defArr);
+    } catch (Exception e) {
+      throw new IndexOutOfBoundsException();
+      // only this exception goes through since defArr is correct Array Size.
+    } // try/catch
   } // insertCol(int)
 
   /**
@@ -165,7 +237,26 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the size of vals is not the same as the height of the matrix.
    */
   public void insertCol(int col, T[] vals) throws ArraySizeException {
-    // STUB
+    if ((col >= width) || (col < 0)) {
+      throw new IndexOutOfBoundsException();
+    } // if
+
+    if (vals.length != this.height) {
+      throw new ArraySizeException();
+    } // if
+
+    T[] placeholder = createEmptyArray(this.storage.length + this.height);
+    for (int i = 0, j = 0, k = 0; i < placeholder.length; i++) {
+      if (i % this.width == col) {
+        placeholder[i] = vals[k];
+        k++;
+      } else {
+        placeholder[i] = storage[j];
+        j++;
+      } // if/else
+    } // for
+    this.storage = placeholder;
+    this.height++;
   } // insertCol(int, T[])
 
   /**
