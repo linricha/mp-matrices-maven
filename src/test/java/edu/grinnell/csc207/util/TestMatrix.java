@@ -356,7 +356,7 @@ class TestMatrix {
   /**
    * Some assorted tests.
    */
-  @Test @SuppressWarnings(("unchecked"))
+  @Test
   void testAssorted() {
     Matrix<String> strings = new MatrixV0(4, 2, " ");
     assertMatrixEquals(
