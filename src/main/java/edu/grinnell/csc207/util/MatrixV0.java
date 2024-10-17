@@ -51,6 +51,10 @@ public class MatrixV0<T> implements Matrix<T> {
     this.height = height;
     this.def = def;
 
+    for (int i = 0; i < this.storage.length; i++) {
+      this.storage[i] = def;
+    }
+
   } // MatrixV0(int, int, T)
 
   /**
@@ -90,7 +94,7 @@ public class MatrixV0<T> implements Matrix<T> {
     if ((row >= this.height) || (col >= this.width) || (row < 0) || (col < 0)) {
       throw new IndexOutOfBoundsException();
     } // if
-    return this.storage[(row + 1) * (col + 1) - 1];
+    return this.storage[(this.width * row) + col];
   } // get(int, int)
 
   /**
@@ -110,7 +114,7 @@ public class MatrixV0<T> implements Matrix<T> {
     if ((row >= this.height) || (col >= this.width) || (row < 0) || (col < 0)) {
       throw new IndexOutOfBoundsException();
     } // if
-    this.storage[(row + 1) * (col + 1) - 1] = val;
+    this.storage[(this.width * row) + col] = val;
   } // set(int, int, T)
 
   /**
@@ -247,7 +251,7 @@ public class MatrixV0<T> implements Matrix<T> {
 
     T[] placeholder = createEmptyArray(this.storage.length + this.height);
     for (int i = 0, j = 0, k = 0; i < placeholder.length; i++) {
-      if (i % this.width == col) {
+      if (i == (col + k * (this.width + 1))) {
         placeholder[i] = vals[k];
         k++;
       } else {
@@ -304,7 +308,7 @@ public class MatrixV0<T> implements Matrix<T> {
 
     T[] placeholder = createEmptyArray(this.storage.length - this.height);
     for (int i = 0, j = 0; i < placeholder.length; i++) {
-      if (i % this.width == col) {
+      if (i % (this.width - 1) == col) {
         j++; // skip over
       } else {
         placeholder[i] = storage[j];
@@ -312,7 +316,7 @@ public class MatrixV0<T> implements Matrix<T> {
       } // if/else
     } // for
     this.storage = placeholder;
-    this.width++;
+    this.width--;
   } // deleteCol(int)
 
   /**

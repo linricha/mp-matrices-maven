@@ -62,7 +62,7 @@ public class MatrixExperiments {
 
     try {
       sample.insertCol(6, new String[] {"A", "B", "C", "D", "E", "F"});
-      figure(pen, "insertCol(6, ABCDEF)", sample);
+      figure(pen, "insertCol(6, ABCDEF)", sample); // need  to double check methods and test by using example and writing down
     } catch (ArraySizeException e) {
       pen.println("*** Failed to insert column 6. ***");
     } // try/catch
