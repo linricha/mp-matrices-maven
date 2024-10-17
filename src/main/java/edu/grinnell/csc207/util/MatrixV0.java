@@ -433,12 +433,14 @@ public class MatrixV0<T> implements Matrix<T> {
    */
   @SuppressWarnings(("unchecked"))
   public boolean equals(Object other) {
-    if (other instanceof MatrixV0) {
-      if ((((MatrixV0<T>) other).width == this.width) && (((MatrixV0<T>) other).height == this.height)) {
-        for (int i = 0; i < ((MatrixV0<T>) other).storage.length; i++) {
-          if (((MatrixV0<T>) other).storage[i] != this.storage[i]) {
-            return false;
-          } // if
+    if (other instanceof Matrix) {
+      if ((((Matrix<T>) other).width() == this.width) && (((Matrix<T>) other).height() == this.height)) {
+        for (int i = 0; i < ((Matrix<T>) other).width(); i++) {
+          for (int j = 0; j < ((Matrix<T>) other).height(); j++) {
+            if (!((Matrix<T>) other).get(j, i).equals(this.get(j, i))) {
+              return false;
+            } // if
+          } // for
         } // for
         return true;
       } // if
