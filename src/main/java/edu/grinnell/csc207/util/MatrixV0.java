@@ -183,7 +183,7 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the size of vals is not the same as the width of the matrix.
    */
   public void insertRow(int row, T[] vals) throws ArraySizeException {
-    if ((row >= height) || (row < 0)) {
+    if ((row > height) || (row < 0)) {
       throw new IndexOutOfBoundsException();
     } // if
 
@@ -192,9 +192,10 @@ public class MatrixV0<T> implements Matrix<T> {
     } // if
 
     T[] placeholder = createEmptyArray(this.storage.length + this.width);
-    for (int i = 0, j = 0; i < placeholder.length; i++) {
-      if (i >= ((row + 1) * this.width - 1) || i <= (row * this.width)) {
-        placeholder[i] = vals[i - j - 1]; // since i = j + 1 called here, thus i - j - 1 = 0.
+    for (int i = 0, j = 0, k = 0; i < placeholder.length; i++) {
+      if ((i >= ((row) * (this.width)) && (i <= ((row + 1) * (this.width) - 1)))) {
+        placeholder[i] = vals[k];
+        k++;
       } else {
         placeholder[i] = storage[j];
         j++;
@@ -241,7 +242,7 @@ public class MatrixV0<T> implements Matrix<T> {
    *   If the size of vals is not the same as the height of the matrix.
    */
   public void insertCol(int col, T[] vals) throws ArraySizeException {
-    if ((col >= width) || (col < 0)) {
+    if ((col > width) || (col < 0)) {
       throw new IndexOutOfBoundsException();
     } // if
 
@@ -280,12 +281,12 @@ public class MatrixV0<T> implements Matrix<T> {
     } // if
 
     T[] placeholder = createEmptyArray(this.storage.length - this.width);
-    for (int i = 0, j = 0; i < placeholder.length; i++) {
-      if (i >= ((row + 1) * this.width - 1) || i <= (row * this.width)) {
-        j++; // skip over
+    for (int i = 0, j = 0; j < this.storage.length; j++) {
+      if ((j >= (row * this.width)) && (j <= ((row + 1) * this.width - 1))) {
+        // skip over
       } else {
         placeholder[i] = storage[j];
-        j++;
+        i++;
       } // if/else
     } // for
     this.storage = placeholder;
@@ -307,12 +308,12 @@ public class MatrixV0<T> implements Matrix<T> {
     } // if
 
     T[] placeholder = createEmptyArray(this.storage.length - this.height);
-    for (int i = 0, j = 0; i < placeholder.length; i++) {
-      if (i % (this.width - 1) == col) {
-        j++; // skip over
+    for (int i = 0, j = 0; j < this.storage.length; j++) {
+      if (j % (this.width) == col) {
+        // skip over
       } else {
         placeholder[i] = storage[j];
-        j++;
+        i++;
       } // if/else
     } // for
     this.storage = placeholder;
@@ -346,7 +347,7 @@ public class MatrixV0<T> implements Matrix<T> {
     int rowCurrent = startRow;
 
     for (int i = rowCurrent; i < endRow; i++) {
-      fillLine(rowCurrent, startCol, 0, 1, rowCurrent + 1, endCol, val);
+      fillLine(i, startCol, 0, 1, endRow, endCol, val);
     } // for
   } // fillRegion(int, int, int, int, T)
 
@@ -378,30 +379,29 @@ public class MatrixV0<T> implements Matrix<T> {
       throw new IndexOutOfBoundsException();
     } // if
 
-    // int updatedEndRow = endRow; (caught by initial if)
-    // int updatedEndCol = endCol;
-
-    // // bound endCol and endRow to what they would be for ease of use
-    // if (updatedEndRow > this.height || updatedEndCol > this.width) {
-    //   updatedEndRow = this.height;
-    //   updatedEndCol = this.width;
-    // } // if
-
-    int modifyStartIndex = (startRow + 1) + (startCol * this.width) - 1;
-    int modifyDelta = (startRow + 1) + (deltaCol * this.width) - 1;
+    int modifyStartIndex = (startCol) + (startRow * this.width);
+    int modifyDelta = (deltaCol) + (deltaRow * this.width);
     int modifyCurrentIndex = modifyStartIndex;
 
+    int previousCol = startCol;
+    int currentCol;
+
     for (int i = 0; i < this.storage.length; i++) {
-      if ((i + 1) / this.width < endRow - 1) { // endRow replaced updatedEndRow
-        if (i % this.height < endCol - 1) { // endCol replaced updatedEndCol
+      if (i / this.width < endRow) {
+        if (i % this.width < endCol) {
           if (i == modifyCurrentIndex) {
             this.storage[i] = val;
             modifyCurrentIndex += modifyDelta;
+            currentCol = modifyCurrentIndex % this.width;
+            if (currentCol < previousCol) {
+              return; // going out-of-bounds (prevents wrapping around).
+            } // if
+            previousCol = currentCol;
           } // if
-        } else {
-          return; // Since not in modify area if modify height surpassed.
-        } // if/else
-      } // if
+        } // if
+      } else {
+        return; // Since not in modify area if modify height surpassed.
+      } // if/else
     } // for
   } // fillLine(int, int, int, int, int, int, T)
 
